@@ -1,90 +1,74 @@
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../custom.css';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
+import Modal from 'react-bootstrap/Modal';
 import BookmarkItem from './BookmarkItem';
 
-
 function Bookmark() {
+  const [bookmarks, setBookmarks] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [title, setTitle] = useState('');
+  const [url, setUrl] = useState('');
+
+  const addBookmark = () => {
+    if (title.trim() !== '' && url.trim() !== '') {
+      setBookmarks([...bookmarks, <BookmarkItem key={bookmarks.length} title={title} url={url}/>]);
+      setTitle('');
+      setUrl('');
+      setShowModal(false);
+    } else {
+      alert('Title and URL cannot be empty');
+    }
+  }
+
+  const openModal = () => {
+    setShowModal(true);
+  }
+
+  const closeModal = () => {
+    setShowModal(false);
+  }
+
   return (
     <>
       <div className="d-grid">
         <Card style={{ backgroundColor: "#f1f2ed" }}>
-          <Form className='text-center'>
-            <BookmarkItem></BookmarkItem>
-            <Form.Group className="ms-5 me-5 mb-3" controlId="loginEmail">
-              <br />
-              <Form.Label>Email address</Form.Label>
-              <Form.Control type="email"
-                placeholder="Enter email" />
-              <Form.Text className="text-muted">
-                Login via your e-mail
-              </Form.Text>
-            </Form.Group>
-
-            <Form.Group className="ms-5 me-5 mb-3" controlId="loginPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password"
-                placeholder="Password" />
-            </Form.Group>
-            <br />
-            <Button className="btn-teal" type="submit">
-              Login
-            </Button>
-            <br /><br />
-            <href class="link-primary">Forgot Your
-              Password?
-            </href>
-            <br />---<br />
-            <href class="link-secondary">Sign Up</href>
-            <br /><br />
+          <Form className='d-flex align-items-center'>
+            <br /><br /><br /><br />
+            <Button className='clickable-card btn-teal ms-5' onClick={openModal}>Add New Bookmark</Button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {bookmarks.map(bookmark => (
+              <Form.Group className="mb-3">
+                {bookmark}
+              </Form.Group>
+            ))}
           </Form>
         </Card>
       </div>
+
+      <Modal show={showModal} onHide={closeModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Bookmark</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Title</Form.Label>
+              <Form.Control type="text" placeholder="Enter title" value={title} onChange={e => setTitle(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>URL</Form.Label>
+              <Form.Control type="text" placeholder="Enter URL" value={url} onChange={e => setUrl(e.target.value)} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeModal}>Cancel</Button>
+          <Button variant="primary" onClick={addBookmark}>Add</Button>
+        </Modal.Footer>
+      </Modal>
     </>
-    // <div className='bg-rain'>
-    //   <div className='container'>
-    //     <div className='row'>
-    //       <div className='d-grid'>
-
-    //         <Card className="d-grid" style={{ backgroundColor: "#f1f2ed" }}>
-    //           <Form className='text-center'>
-    //             <BookmarkItem></BookmarkItem>
-    //             <Form.Group className="ms-5 me-5 mb-3" controlId="loginEmail">
-    //               <br />
-    //               <Form.Label>Email address</Form.Label>
-    //               <Form.Control type="email"
-    //                 placeholder="Enter email" />
-    //               <Form.Text className="text-muted">
-    //                 Login via your e-mail
-    //               </Form.Text>
-    //             </Form.Group>
-
-    //             <Form.Group className="ms-5 me-5 mb-3" controlId="loginPassword">
-    //               <Form.Label>Password</Form.Label>
-    //               <Form.Control type="password"
-    //                 placeholder="Password" />
-    //             </Form.Group>
-    //             <br />
-    //             <Button className="btn-teal" type="submit">
-    //               Login
-    //             </Button>
-    //             <br /><br />
-    //             <href class="link-primary">Forgot Your
-    //               Password?
-    //             </href>
-    //             <br />---<br />
-    //             <href class="link-secondary">Sign Up</href>
-    //             <br /><br />
-    //           </Form>
-    //         </Card>
-    //         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
 

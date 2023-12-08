@@ -2,14 +2,15 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../custom.css';
 
-function BookmarkItem() {
+function BookmarkItem({ title, url }) {
+    const faviconUrl = `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`;
+
     return (
         <div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-                <br /><br /><br /><br /><br />
-                <img src="https://placehold.co/50x50" alt="description" style={{ width: '4vw', height: '4vh' }} />
-                <div className='mb-1'>
-                    Bookmark item name
+                <img className='mt-2' src={faviconUrl} alt="description" style={{ width: '24px', height: '24px' }} />
+                <div className='mt-2 mb-1'>
+                    &nbsp;&nbsp;{title}
                 </div>
             </div>
         </div>
