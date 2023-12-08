@@ -11,6 +11,7 @@ function BookmarkItem({ title, url }) {
                 <img className='mt-2' src={faviconUrl} alt="description" style={{ width: '24px', height: '24px' }} />
                 <div className='mt-2 mb-1'>
                     &nbsp;&nbsp;{title}&nbsp;&nbsp;
+                    {/* TODO: margin padding koy nbspler yerine bak bakam bi */}
                 </div>
             </div>
         </div>

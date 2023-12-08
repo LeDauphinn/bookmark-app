@@ -38,6 +38,7 @@ function Bookmark() {
             <br /><br /><br /><br />
             <Button className='clickable-card btn-teal ms-5' onClick={openModal}>Add New Bookmark</Button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {/* TODO: margin padding koy nbspler yerine bak bakam bi  */}
             {bookmarks.map(bookmark => (
               <Form.Group className="mb-3">
                 {bookmark}
