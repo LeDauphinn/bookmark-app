@@ -4,15 +4,20 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 
-function BookmarkItem({ title, url }) {
+function BookmarkItem({ title, url, sliceLength }) {
   const faviconUrl = `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`;
+  let displayTitle = title;
+
+  if (sliceLength && title.length > sliceLength) {
+    displayTitle = title.slice(0, sliceLength) + '...';
+  }
 
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <img className='mt-2' src={faviconUrl} alt="description" style={{ width: '24px', height: '24px' }} />
         <div className='mt-2 mb-1'>
-          &nbsp;&nbsp;{title}&nbsp;&nbsp;
+          &nbsp;&nbsp;{displayTitle}&nbsp;&nbsp;
         </div>
       </div>
     </div>
@@ -29,11 +34,7 @@ function Bookmark() {
 
   const addBookmark = () => {
     if (title.trim() !== '' && url.trim() !== '') {
-      let shortTitle = title;
-      if (title.length > 10) {
-        shortTitle = title.slice(0, 7) + '...';
-      }
-      setBookmarks([...bookmarks, { title: shortTitle, url }]);
+      setBookmarks([...bookmarks, { title, url }]);
       setTitle('');
       setUrl('');
       setShowModal(false);
@@ -64,21 +65,21 @@ function Bookmark() {
       <div className="d-grid">
         <Card style={{ backgroundColor: "#f1f2ed" }}>
           <Form className='d-flex align-items-center'>
-            <br /><br />
+            <br /><br /><br />
             <Button className='clickable-card btn-teal ms-5' onClick={openModal}>Add New Bookmark</Button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <div className="d-flex justify-content-between">
-              <div className="d-flex flex-row flex-wrap mt-2" style={{ overflow: 'auto', flex: '1 1 auto' }}>
+              <div className="d-flex flex-row flex-wrap pt-2" style={{ overflow: 'auto', flex: '1 1 auto' }}>
                 {bookmarks.map((bookmark, index) => {
                   return (
                     <Form.Group key={index}>
-                      <BookmarkItem title={bookmark.title} url={bookmark.url} />
+                      <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={7} />
                     </Form.Group>
                   );
                 })}
               </div>
-              <div className='d-flex justify-content-end'>
-                <Button className="clickable-card btn-fav ms-5 mb-3" onClick={openOffcanvas}>+</Button>
+              <div className='d-flex align-items-center justify-content-end'>
+                <Button className="clickable-card btn-fav ms-5 mb-2" onClick={openOffcanvas}>+</Button>
               </div>
             </div>
           </Form>
@@ -89,7 +90,7 @@ function Bookmark() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 {bookmarks.map((bookmark, index) => (
-                  <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} />
+                  <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={17} />
                 ))}
               </Offcanvas.Body>
             </Offcanvas>
