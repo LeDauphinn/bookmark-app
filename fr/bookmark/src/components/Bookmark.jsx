@@ -63,16 +63,19 @@ function Bookmark() {
             <br /><br />
             <Button className='clickable-card btn-teal ms-5' onClick={openModal}>Add New Bookmark</Button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {bookmarks.map((bookmark, index) => {
-              const shortTitle = bookmarks.length > 5 ? bookmark.title.slice(0, 10) + '...' : bookmark.title;
-              return (
-                <Form.Group className="mb-2" key={index}>
-                  <BookmarkItem title={shortTitle} url={bookmark.url} />
-                </Form.Group>
-              );
-            })}
-            <div className='d-flex justify-content-end'>
-              <Button className="clickable-card btn-fav ms-5 mb-3" onClick={openOffcanvas}>+</Button>
+            <div className="d-flex justify-content-between">
+            <div className="d-flex flex-row flex-wrap" style={{ overflow: 'auto', flex: '1 1 auto' }}>
+              {bookmarks.map((bookmark, index) => {
+                return (
+                  <Form.Group className="mb-2" key={index}>
+                    <BookmarkItem title={bookmark.title} url={bookmark.url} />
+                  </Form.Group>
+                );
+              })}
+            </div>
+              <div className='d-flex justify-content-end'>
+                <Button className="clickable-card btn-fav ms-5 mb-3" onClick={openOffcanvas}>+</Button>
+              </div>
             </div>
           </Form>
           <Form className='d-flex align-items-center'>
