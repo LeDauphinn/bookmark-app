@@ -29,7 +29,11 @@ function Bookmark() {
 
   const addBookmark = () => {
     if (title.trim() !== '' && url.trim() !== '') {
-      setBookmarks([...bookmarks, { title, url }]);
+      let shortTitle = title;
+      if (title.length > 10) {
+        shortTitle = title.slice(0, 7) + '...';
+      }
+      setBookmarks([...bookmarks, { title: shortTitle, url }]);
       setTitle('');
       setUrl('');
       setShowModal(false);
@@ -64,15 +68,15 @@ function Bookmark() {
             <Button className='clickable-card btn-teal ms-5' onClick={openModal}>Add New Bookmark</Button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <div className="d-flex justify-content-between">
-            <div className="d-flex flex-row flex-wrap" style={{ overflow: 'auto', flex: '1 1 auto' }}>
-              {bookmarks.map((bookmark, index) => {
-                return (
-                  <Form.Group className="mb-2" key={index}>
-                    <BookmarkItem title={bookmark.title} url={bookmark.url} />
-                  </Form.Group>
-                );
-              })}
-            </div>
+              <div className="d-flex flex-row flex-wrap mt-2" style={{ overflow: 'auto', flex: '1 1 auto' }}>
+                {bookmarks.map((bookmark, index) => {
+                  return (
+                    <Form.Group key={index}>
+                      <BookmarkItem title={bookmark.title} url={bookmark.url} />
+                    </Form.Group>
+                  );
+                })}
+              </div>
               <div className='d-flex justify-content-end'>
                 <Button className="clickable-card btn-fav ms-5 mb-3" onClick={openOffcanvas}>+</Button>
               </div>
@@ -85,7 +89,7 @@ function Bookmark() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 {bookmarks.map((bookmark, index) => (
-                  <li key={index}>{bookmark}</li>
+                  <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} />
                 ))}
               </Offcanvas.Body>
             </Offcanvas>
