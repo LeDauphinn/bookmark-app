@@ -8,14 +8,14 @@ function BookmarkItem({ title, url }) {
   const faviconUrl = `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`;
 
   return (
-      <div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-              <img className='mt-2' src={faviconUrl} alt="description" style={{ width: '24px', height: '24px' }} />
-              <div className='mt-2 mb-1'>
-                  &nbsp;&nbsp;{title}&nbsp;&nbsp;
-              </div>
-          </div>
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <img className='mt-2' src={faviconUrl} alt="description" style={{ width: '24px', height: '24px' }} />
+        <div className='mt-2 mb-1'>
+          &nbsp;&nbsp;{title}&nbsp;&nbsp;
+        </div>
       </div>
+    </div>
   );
 }
 
@@ -29,7 +29,7 @@ function Bookmark() {
 
   const addBookmark = () => {
     if (title.trim() !== '' && url.trim() !== '') {
-      setBookmarks([...bookmarks, <BookmarkItem key={bookmarks.length} title={title} url={url} />]);
+      setBookmarks([...bookmarks, { title, url }]);
       setTitle('');
       setUrl('');
       setShowModal(false);
@@ -63,14 +63,17 @@ function Bookmark() {
             <br /><br />
             <Button className='clickable-card btn-teal ms-5' onClick={openModal}>Add New Bookmark</Button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {bookmarks.map(bookmark => (
-              <Form.Group className="mb-2">
-                {bookmark}
-              </Form.Group>
-            ))}
-          <div className='d-flex justify-content-end'>
-            <Button className="clickable-card btn-fav ms-5 mb-3" onClick={openOffcanvas}>+</Button>
-          </div>
+            {bookmarks.map((bookmark, index) => {
+              const shortTitle = bookmarks.length > 5 ? bookmark.title.slice(0, 10) + '...' : bookmark.title;
+              return (
+                <Form.Group className="mb-2" key={index}>
+                  <BookmarkItem title={shortTitle} url={bookmark.url} />
+                </Form.Group>
+              );
+            })}
+            <div className='d-flex justify-content-end'>
+              <Button className="clickable-card btn-fav ms-5 mb-3" onClick={openOffcanvas}>+</Button>
+            </div>
           </Form>
           <Form className='d-flex align-items-center'>
             <Offcanvas show={showOffcanvas} onHide={closeOffcanvas} placement="end">
