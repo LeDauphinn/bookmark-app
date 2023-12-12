@@ -30,14 +30,20 @@ function Bookmark() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
-
+  const [showAlertModal, setShowAlertModal] = useState(false);
 
   const addBookmark = () => {
     if (title.trim() !== '' && url.trim() !== '') {
-      setBookmarks([...bookmarks, { title, url }]);
+      const newBookmarks = [...bookmarks, { title, url }];
+      setBookmarks(newBookmarks);
       setTitle('');
       setUrl('');
       setShowModal(false);
+
+      if (newBookmarks.length >= 8) {
+        setShowOffcanvas(true);
+        setShowAlertModal(true);
+      }
     } else {
       alert('Title and URL cannot be empty');
     }
@@ -70,16 +76,16 @@ function Bookmark() {
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <div className="d-flex justify-content-between">
               <div className="d-flex flex-row flex-wrap pt-2" style={{ overflow: 'auto', flex: '1 1 auto' }}>
-                {bookmarks.map((bookmark, index) => {
+                {bookmarks.slice(0, 7).map((bookmark, index) => {
                   return (
                     <Form.Group key={index}>
-                      <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={7} />
+                      <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={16} />
                     </Form.Group>
                   );
                 })}
               </div>
               <div className='d-flex align-items-center justify-content-end'>
-                <Button className="clickable-card btn-fav ms-5 mb-2" onClick={openOffcanvas}>+</Button>
+                <Button className="clickable-card btn-fav ms-5 mb-2" onClick={openOffcanvas}>&#8592;</Button>
               </div>
             </div>
           </Form>
@@ -90,7 +96,7 @@ function Bookmark() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 {bookmarks.map((bookmark, index) => (
-                  <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={17} />
+                  <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={35} />
                 ))}
               </Offcanvas.Body>
             </Offcanvas>
@@ -117,6 +123,18 @@ function Bookmark() {
         <Modal.Footer>
           <Button variant="secondary" onClick={closeModal}>Cancel</Button>
           <Button variant="primary" onClick={addBookmark}>Add</Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showAlertModal} onHide={() => setShowAlertModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Alert</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>No space in top bar</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAlertModal(false)}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
