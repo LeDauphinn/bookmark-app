@@ -5,7 +5,7 @@ import Bookmark from './components/Bookmark';
 
 function App() {
   return (
-    <div className='bg-rain' style={{ width: '100vw' }}>
+    <div style={{ width: '100vw' }}>
       <Bookmark ></Bookmark>
     </div>
   );
