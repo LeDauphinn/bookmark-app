@@ -1,9 +1,9 @@
 # arch-guys
 ## Prerequisites
-  .Docker Engine
-  .NPM
-  .NPX
-  .Node
+  . Docker Engine
+  . NPM
+  . NPX
+  . Node
 
 
 ## Installation
