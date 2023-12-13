@@ -38,6 +38,13 @@ code {
     border-color: #d14d72;
 }
 
+#scrollable {
+    height: 100%;
+    /* width: 100%; */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .btn-teal {
     background-color: #254f73;
     border-color: #254f73;

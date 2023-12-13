@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Offcanvas } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
@@ -57,18 +57,19 @@ function Bookmark() {
   }
 
   const addBookmark = () => {
-    if (title.trim() !== '' && url.trim() !== '') {
+    if (url.trim() !== '') {
       const newBookmarks = [...bookmarks, { title, url }];
       setBookmarks(newBookmarks);
+      localStorage.setItem('bookmarks', JSON.stringify(newBookmarks)); // Add this line
       setTitle('');
       setUrl('');
       setShowModal(false);
-
+  
       if (newBookmarks.length >= 8) {
         setShowOffcanvas(true);
       }
     } else {
-      alert('Title and URL cannot be empty');
+      alert('URL cannot be empty');
     }
   }
 
@@ -93,6 +94,12 @@ function Bookmark() {
     setBookmarks(newBookmarks);
   }
 
+  useEffect(() => {
+    const savedBookmarks = localStorage.getItem('bookmarks');
+    if (savedBookmarks) {
+      setBookmarks(JSON.parse(savedBookmarks));
+    }
+  }, []);
 
   return (
     <>
@@ -120,22 +127,26 @@ function Bookmark() {
             </div>
           </Form>
           <Form className='d-flex align-items-center'>
-            <Offcanvas show={showOffcanvas} onHide={closeOffcanvas} placement="end">
+            <Offcanvas id="scrollable" show={showOffcanvas} onHide={closeOffcanvas} placement="end">
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title>Bookmarks</Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
                 {bookmarks.map((bookmark, index) => (
-                  <div key={index} className="d-flex align-items-center">
-                    <Form.Check
-                      className='mt-2 me-2'
-                      checked={selectedCheckboxes.includes(index)}
-                      onChange={() => handleCheckboxChange(index)}
-                    />
-                    <a href={bookmark.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'black' }}>
-                      <BookmarkItem title={bookmark.title} url={bookmark.url} sliceLength={35} />
-                    </a>
-                    <Button className='btn-velvet' onClick={() => handleDelete(index)}>×</Button> {/* Add this line */}
+                  <div key={index} className="d-flex justify-content-between">
+                    <div className="d-flex flex-row flex-wrap" style={{ overflow: 'auto', flex: '1 1 auto' }}>
+                      <Form.Check
+                        className='mt-2 me-2'
+                        checked={selectedCheckboxes.includes(index)}
+                        onChange={() => handleCheckboxChange(index)}
+                      />
+                      <a href={bookmark.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'black' }}>
+                        <BookmarkItem title={bookmark.title} url={bookmark.url} sliceLength={30} />
+                      </a>
+                    </div>
+                    <div className='d-flex justify-content-end'>
+                      <Button className='btn-velvet' onClick={() => handleDelete(index)}>×</Button> {/* Add this line */}
+                    </div>
                   </div>
                 ))}
               </Offcanvas.Body>
@@ -171,10 +182,7 @@ function Bookmark() {
 
 /*
 Yeni todos:
-scrollable alan olcak offcanvasta
-bookmarkitem tıklayınca gidilcek
 shared bookmark eklencek sola
-toplam 7 seçilebilecek
 */
 
 /* Dizayn için aklıma gelen ama yetişmeyen şeyler:
