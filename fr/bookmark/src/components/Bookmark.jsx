@@ -32,6 +32,8 @@ function Bookmark() {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const [showJsonModal, setShowJsonModal] = useState(false);
+
 
   const handleCheckboxChange = (index) => {
     if (selectedCheckboxes.includes(index)) {
@@ -57,7 +59,7 @@ function Bookmark() {
       setTitle('');
       setUrl('');
       setShowModal(false);
-  
+
       if (newBookmarks.length >= 8) {
         setShowOffcanvas(true);
       }
@@ -88,6 +90,68 @@ function Bookmark() {
     localStorage.setItem('bookmarks', JSON.stringify(newBookmarks)); // Add this line
   }
 
+  const convertBookmarksToJson = () => {
+    const json = JSON.stringify(bookmarks, null, 2);
+    console.log(json);
+  }
+
+  const openJsonModal = () => setShowJsonModal(true);
+  const closeJsonModal = () => setShowJsonModal(false);
+
+  const convertAndOpenModal = () => {
+    convertBookmarksToJson();
+    openJsonModal();
+  }
+
+  const appendJsonToBookmarks = () => {
+    const newBookmarks = [
+      {
+        "title": "sokuk sözlük",
+        "url": "https://www.seslisozluk.net/"
+      },
+      {
+        "title": "https://w3.bilkent.edu.tr/www/akademiktakvim/",
+        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
+      },
+      {
+        "title": "https://www.kubikatoys.com/",
+        "url": "https://www.kubikatoys.com/"
+      },
+      {
+        "title": "https://www.kubikatoys.com/",
+        "url": "https://www.kubikatoys.com/"
+      },
+      {
+        "title": "https://www.kubikatoys.com/",
+        "url": "https://www.kubikatoys.com/"
+      },
+      {
+        "title": "https://w3.bilkent.edu.tr/www/akademiktakvim/",
+        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
+      },
+      {
+        "title": "https://w3.bilkent.edu.tr/www/akademiktakvim/",
+        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
+      },
+      {
+        "title": "https://w3.bilkent.edu.tr/www/akademiktakvim/",
+        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
+      },
+      {
+        "title": "aşsdlkaşdslkasdş",
+        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
+      },
+      {
+        "title": "ender",
+        "url": "https://www.kubikatoys.com/"
+      }
+    ]; // Replace this with your specific JSON
+    const updatedBookmarks = [...bookmarks, ...newBookmarks];
+    setBookmarks(updatedBookmarks);
+    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+  }
+
+
   useEffect(() => {
     const savedBookmarks = localStorage.getItem('bookmarks');
     if (savedBookmarks) {
@@ -116,16 +180,16 @@ function Bookmark() {
                 })}
               </div>
               <div className='d-flex align-items-center justify-content-end'>
-                <Button className="clickable-card btn-fav ms-5 mb-2" onClick={openOffcanvas}>&#8592;</Button>
+                <Button className="clickable-card btn-fav mb-2" onClick={openOffcanvas}>&#8592;</Button>
               </div>
             </div>
           </Form>
           <Form className='d-flex align-items-center'>
-            <Offcanvas id="scrollable" show={showOffcanvas} onHide={closeOffcanvas} placement="end">
+            <Offcanvas show={showOffcanvas} onHide={closeOffcanvas} placement="end">
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title>Bookmarks</Offcanvas.Title>
               </Offcanvas.Header>
-              <Offcanvas.Body>
+              <Offcanvas.Body style={{ backgroundColor: "#f2f2f2" }} id="scrollable">
                 {bookmarks.map((bookmark, index) => (
                   <div key={index} className="d-flex justify-content-between">
                     <div className="d-flex flex-row flex-wrap" style={{ overflow: 'auto', flex: '1 1 auto' }}>
@@ -144,6 +208,17 @@ function Bookmark() {
                   </div>
                 ))}
               </Offcanvas.Body>
+              <Form>
+                <Form.Group className='d-flex mt-3 ms-4 me-4 align-items-center'>
+                  <Button className='btn-teal me-2' onClick={appendJsonToBookmarks}>Append</Button>
+                  <Form.Control type="text" placeholder="Enter ..." />
+                </Form.Group>
+                <Form.Group className='d-flex mt-1 ms-4 me-4 align-items-center'>
+                  <Button className='btn-teal me-3' onClick={convertAndOpenModal}>Convert to JSON</Button>
+                </Form.Group>
+                <br />
+                <br />
+              </Form>
             </Offcanvas>
           </Form>
         </Card>
@@ -168,6 +243,20 @@ function Bookmark() {
         <Modal.Footer>
           <Button variant="secondary" onClick={closeModal}>Cancel</Button>
           <Button variant="primary" onClick={addBookmark}>Add</Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showJsonModal} onHide={closeJsonModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>JSON Output</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <pre>{JSON.stringify(bookmarks, null, 2)}</pre>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeJsonModal}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

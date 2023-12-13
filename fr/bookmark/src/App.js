@@ -5,8 +5,18 @@ import Bookmark from './components/Bookmark';
 
 function App() {
   return (
-    <div style={{ width: '100vw' }}>
-      <Bookmark ></Bookmark>
+    <div className='bg-rain' style={{ width: '100vw' }}>
+      <Bookmark  className='bg-rain'></Bookmark>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     </div>
   );
 }
