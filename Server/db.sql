@@ -1,14 +1,14 @@
 SET sql_mode = 'STRICT_ALL_TABLES';
 CREATE TABLE IF NOT EXISTS instance(
 	instance_hash VARCHAR(256) NOT NULL,
-	url varchar(100) NOT NULL,
-	title varchar(30) NOT NULL,
+	url varchar(512) NOT NULL,
+	title varchar(512) NOT NULL,
 	PRIMARY KEY (url,instance_hash)
 );
 
 CREATE TABLE IF NOT EXISTS bookmark(
-	url varchar(100) NOT NULL,
-	title varchar(30) NOT NULL,
+	url varchar(512) NOT NULL,
+	title varchar(512) NOT NULL,
 	PRIMARY KEY (url)
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `group`(
 
 CREATE TABLE IF NOT EXISTS bookmark_group(
 	group_id int NOT NULL,
-	url varchar(100) NOT NULL,
+	url varchar(512) NOT NULL,
 	FOREIGN KEY (group_id) REFERENCES `group`(group_id),
 	FOREIGN KEY (url) REFERENCES bookmark(url),
     PRIMARY KEY (group_id, url)

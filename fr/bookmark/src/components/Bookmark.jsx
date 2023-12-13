@@ -3,7 +3,7 @@ import { Button, Offcanvas } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
-
+import axios from 'axios';
 
 function BookmarkItem({ title, url, sliceLength }) {
   const faviconUrl = `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`;
@@ -33,6 +33,8 @@ function Bookmark() {
   const [url, setUrl] = useState('');
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
   const [showJsonModal, setShowJsonModal] = useState(false);
+  const [responseData, setResponseData] = useState(null);
+  const [inputValue, setInputValue] = useState('');
 
 
   const handleCheckboxChange = (index) => {
@@ -84,6 +86,10 @@ function Bookmark() {
     setShowOffcanvas(false);
   };
 
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  }
+
   const handleDelete = (index) => {
     const newBookmarks = bookmarks.filter((_, i) => i !== index);
     setBookmarks(newBookmarks);
@@ -93,62 +99,63 @@ function Bookmark() {
   const convertBookmarksToJson = () => {
     const json = JSON.stringify(bookmarks, null, 2);
     console.log(json);
+    return json;
   }
 
   const openJsonModal = () => setShowJsonModal(true);
   const closeJsonModal = () => setShowJsonModal(false);
 
-  const convertAndOpenModal = () => {
-    convertBookmarksToJson();
-    openJsonModal();
+  const convertAndOpenModal = async () => {
+    const bookmarksJson = convertBookmarksToJson();
+
+    try {
+      await axios({
+        method: 'post',
+        url: 'http://localhost:3001/export',
+        data: bookmarksJson,
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(function (response) {
+          console.log(bookmarksJson);
+          setResponseData(response.data);
+          openJsonModal();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+
+      // Set the response data in the stat
+    } catch (error) {
+      console.error('Failed to send bookmarks JSON', error);
+    }
   }
 
-  const appendJsonToBookmarks = () => {
-    const newBookmarks = [
-      {
-        "title": "sokuk sözlük",
-        "url": "https://www.seslisozluk.net/"
-      },
-      {
-        "title": "https://w3.bilkent.edu.tr/www/akademiktakvim/",
-        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
-      },
-      {
-        "title": "https://www.kubikatoys.com/",
-        "url": "https://www.kubikatoys.com/"
-      },
-      {
-        "title": "https://www.kubikatoys.com/",
-        "url": "https://www.kubikatoys.com/"
-      },
-      {
-        "title": "https://www.kubikatoys.com/",
-        "url": "https://www.kubikatoys.com/"
-      },
-      {
-        "title": "https://w3.bilkent.edu.tr/www/akademiktakvim/",
-        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
-      },
-      {
-        "title": "https://w3.bilkent.edu.tr/www/akademiktakvim/",
-        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
-      },
-      {
-        "title": "https://w3.bilkent.edu.tr/www/akademiktakvim/",
-        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
-      },
-      {
-        "title": "aşsdlkaşdslkasdş",
-        "url": "https://w3.bilkent.edu.tr/www/akademiktakvim/"
-      },
-      {
-        "title": "ender",
-        "url": "https://www.kubikatoys.com/"
-      }
-    ]; // Replace this with your specific JSON
-    const updatedBookmarks = [...bookmarks, ...newBookmarks];
-    setBookmarks(updatedBookmarks);
-    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+  const appendJsonToBookmarks = async () => {
+    console.log(inputValue);
+    try {
+      await axios({
+        method: 'post',
+        url: 'http://localhost:3001/import',
+        data: {"uuid":inputValue},
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(function (response) {
+          console.log(inputValue);
+          const newBookmarks = response.data;
+          const updatedBookmarks = [...bookmarks, ...newBookmarks];
+          setBookmarks(updatedBookmarks);
+          localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+
+      // Set the response data in the stat
+    } catch (error) {
+      console.error('Failed to send bookmarks JSON', error);
+    }
   }
 
 
@@ -211,7 +218,7 @@ function Bookmark() {
               <Form>
                 <Form.Group className='d-flex mt-3 ms-4 me-4 align-items-center'>
                   <Button className='btn-teal me-2' onClick={appendJsonToBookmarks}>Append</Button>
-                  <Form.Control type="text" placeholder="Enter ..." />
+                  <Form.Control type="text" value={inputValue} onChange={handleInputChange} />
                 </Form.Group>
                 <Form.Group className='d-flex mt-1 ms-4 me-4 align-items-center'>
                   <Button className='btn-teal me-3' onClick={convertAndOpenModal}>Convert to JSON</Button>
@@ -251,7 +258,7 @@ function Bookmark() {
           <Modal.Title>JSON Output</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <pre>{JSON.stringify(bookmarks, null, 2)}</pre>
+          <pre>{JSON.stringify(responseData, null, 2)}</pre>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeJsonModal}>

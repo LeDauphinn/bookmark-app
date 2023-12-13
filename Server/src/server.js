@@ -26,10 +26,18 @@ app.post('/export', async(req, res) => {
   
   const uuid = uuidv4();
   instances = req.body;
+  console.log(req.body);
+  if(req.body.length === 0){
+    res.status(400).json("Empty array");  
+  }
   for (const instance of instances) {
     const { title, url } = instance;
     const query = `INSERT INTO instance (instance_hash, url, title) VALUES ("${uuid}", "${url}", "${title}")`;
-    await connection.query(query);
+    try {
+      await connection.query(query);
+    } catch (error) {
+      res.status(400);
+    }
   }
   res.status(200).json(uuid);
 
@@ -39,6 +47,7 @@ app.post('/export', async(req, res) => {
 app.post('/import', async(req, res) => {
   
   uuid =String(req.body.uuid);
+  console.log(uuid);
   const query = `SELECT url, title FROM instance WHERE instance_hash = "${uuid}"`;
   const [rows, fields] = await connection.query(query);
   res.status(200).json(rows);
