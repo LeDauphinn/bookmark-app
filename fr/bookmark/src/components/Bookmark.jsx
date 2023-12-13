@@ -30,7 +30,19 @@ function Bookmark() {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
-  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+
+  const handleCheckboxChange = (index) => {
+    if (selectedCheckboxes.includes(index)) {
+      setSelectedCheckboxes(selectedCheckboxes.filter(i => i !== index));
+    } else if (selectedCheckboxes.length < 7) {
+      setSelectedCheckboxes([...selectedCheckboxes, index]);
+
+      const bookmarkToMove = bookmarks[index];
+      const newBookmarks = [bookmarkToMove, ...bookmarks.filter((_, i) => i !== index)];
+      setBookmarks(newBookmarks);
+    }
+  }
 
   const addBookmark = () => {
     if (title.trim() !== '' && url.trim() !== '') {
@@ -42,7 +54,6 @@ function Bookmark() {
 
       if (newBookmarks.length >= 8) {
         setShowOffcanvas(true);
-        setShowAlertModal(true);
       }
     } else {
       alert('Title and URL cannot be empty');
@@ -96,7 +107,14 @@ function Bookmark() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 {bookmarks.map((bookmark, index) => (
-                  <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={35} />
+                  <div key={index} className="d-flex align-items-center">
+                    <Form.Check
+                      className='mt-2 me-2'
+                      checked={selectedCheckboxes.includes(index)}
+                      onChange={() => handleCheckboxChange(index)}
+                    />
+                    <BookmarkItem title={bookmark.title} url={bookmark.url} sliceLength={35} />
+                  </div>
                 ))}
               </Offcanvas.Body>
             </Offcanvas>
@@ -125,21 +143,19 @@ function Bookmark() {
           <Button variant="primary" onClick={addBookmark}>Add</Button>
         </Modal.Footer>
       </Modal>
-
-      <Modal show={showAlertModal} onHide={() => setShowAlertModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Alert</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>No space in top bar</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAlertModal(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 }
+
+/*
+Yeni todos:
+scrollable alan olcak offcanvasta
+remove olcak
+bookmarkitem tıklayınca gidilcek
+shared bookmark eklencek sola
+toplam 7 seçilebilecek
+*/
+
 /* Dizayn için aklıma gelen ama yetişmeyen şeyler:
 1. En üstte mesela sınırlı sayıda bookmark tutulup, en eski olan yeni bookmark eklendiğinde
 otomatik olarak silinebilir ve offcanvasa koyulabilir. Mesela yukarda 8 tane bookmark varsa
