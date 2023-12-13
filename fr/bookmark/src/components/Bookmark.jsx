@@ -258,7 +258,7 @@ function Bookmark() {
           <Modal.Title>JSON Output</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <pre>{JSON.stringify(responseData, null, 2)}</pre>
+          <pre>{responseData}</pre>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeJsonModal}>
