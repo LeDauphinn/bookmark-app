@@ -35,14 +35,6 @@ function Bookmark() {
   const handleCheckboxChange = (index) => {
     if (selectedCheckboxes.includes(index)) {
       setSelectedCheckboxes(selectedCheckboxes.filter(i => i !== index));
-
-      // If the length of bookmarks is 8 or higher, move the bookmark at the clicked checkbox's index to the 8th index
-      if (bookmarks.length >= 8) {
-        const bookmarkToMove = bookmarks[index];
-        let newBookmarks = bookmarks.filter((_, i) => i !== index);
-        newBookmarks.splice(8, 0, bookmarkToMove);
-        setBookmarks(newBookmarks);
-      }
     } else if (selectedCheckboxes.length < 7) {
       setSelectedCheckboxes([...selectedCheckboxes, index]);
 
@@ -50,10 +42,8 @@ function Bookmark() {
       const bookmarkToMove = bookmarks[index];
       const newBookmarks = [bookmarkToMove, ...bookmarks.filter((_, i) => i !== index)];
       setBookmarks(newBookmarks);
+      localStorage.setItem('bookmarks', JSON.stringify(newBookmarks)); // Add this line
     }
-
-    // Uncheck every checkbox
-    setSelectedCheckboxes([]);
   }
 
   const addBookmark = () => {
@@ -92,6 +82,7 @@ function Bookmark() {
   const handleDelete = (index) => {
     const newBookmarks = bookmarks.filter((_, i) => i !== index);
     setBookmarks(newBookmarks);
+    localStorage.setItem('bookmarks', JSON.stringify(newBookmarks)); // Add this line
   }
 
   useEffect(() => {
