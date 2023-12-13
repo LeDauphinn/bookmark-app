@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 
+
 function BookmarkItem({ title, url, sliceLength }) {
   const faviconUrl = `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`;
   let displayTitle = title;
@@ -42,7 +43,9 @@ function Bookmark() {
       const bookmarkToMove = bookmarks[index];
       const newBookmarks = [bookmarkToMove, ...bookmarks.filter((_, i) => i !== index)];
       setBookmarks(newBookmarks);
-      localStorage.setItem('bookmarks', JSON.stringify(newBookmarks)); // Add this line
+      localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
+
+      setSelectedCheckboxes([]); // Add this line
     }
   }
 
@@ -127,7 +130,7 @@ function Bookmark() {
                   <div key={index} className="d-flex justify-content-between">
                     <div className="d-flex flex-row flex-wrap" style={{ overflow: 'auto', flex: '1 1 auto' }}>
                       <Form.Check
-                        className='mt-2 me-2'
+                        className='mt-2 me-2 ms-2'
                         checked={selectedCheckboxes.includes(index)}
                         onChange={() => handleCheckboxChange(index)}
                       />
