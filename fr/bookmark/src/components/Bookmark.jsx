@@ -35,13 +35,25 @@ function Bookmark() {
   const handleCheckboxChange = (index) => {
     if (selectedCheckboxes.includes(index)) {
       setSelectedCheckboxes(selectedCheckboxes.filter(i => i !== index));
+
+      // If the length of bookmarks is 8 or higher, move the bookmark at the clicked checkbox's index to the 8th index
+      if (bookmarks.length >= 8) {
+        const bookmarkToMove = bookmarks[index];
+        let newBookmarks = bookmarks.filter((_, i) => i !== index);
+        newBookmarks.splice(8, 0, bookmarkToMove);
+        setBookmarks(newBookmarks);
+      }
     } else if (selectedCheckboxes.length < 7) {
       setSelectedCheckboxes([...selectedCheckboxes, index]);
 
+      // Move the bookmark at the clicked checkbox's index to the start of the bookmarks array
       const bookmarkToMove = bookmarks[index];
       const newBookmarks = [bookmarkToMove, ...bookmarks.filter((_, i) => i !== index)];
       setBookmarks(newBookmarks);
     }
+
+    // Uncheck every checkbox
+    setSelectedCheckboxes([]);
   }
 
   const addBookmark = () => {
@@ -76,6 +88,11 @@ function Bookmark() {
     setShowOffcanvas(false);
   };
 
+  const handleDelete = (index) => {
+    const newBookmarks = bookmarks.filter((_, i) => i !== index);
+    setBookmarks(newBookmarks);
+  }
+
 
   return (
     <>
@@ -90,7 +107,9 @@ function Bookmark() {
                 {bookmarks.slice(0, 7).map((bookmark, index) => {
                   return (
                     <Form.Group key={index}>
-                      <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={16} />
+                      <a href={bookmark.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'black' }}>
+                        <BookmarkItem key={index} title={bookmark.title} url={bookmark.url} sliceLength={16} />
+                      </a>
                     </Form.Group>
                   );
                 })}
@@ -113,7 +132,10 @@ function Bookmark() {
                       checked={selectedCheckboxes.includes(index)}
                       onChange={() => handleCheckboxChange(index)}
                     />
-                    <BookmarkItem title={bookmark.title} url={bookmark.url} sliceLength={35} />
+                    <a href={bookmark.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'black' }}>
+                      <BookmarkItem title={bookmark.title} url={bookmark.url} sliceLength={35} />
+                    </a>
+                    <Button className='btn-velvet' onClick={() => handleDelete(index)}>×</Button> {/* Add this line */}
                   </div>
                 ))}
               </Offcanvas.Body>
@@ -150,7 +172,6 @@ function Bookmark() {
 /*
 Yeni todos:
 scrollable alan olcak offcanvasta
-remove olcak
 bookmarkitem tıklayınca gidilcek
 shared bookmark eklencek sola
 toplam 7 seçilebilecek
