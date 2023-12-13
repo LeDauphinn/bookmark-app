@@ -1,4 +1,11 @@
 SET sql_mode = 'STRICT_ALL_TABLES';
+CREATE TABLE IF NOT EXISTS instance(
+	instance_hash VARCHAR(256) NOT NULL,
+	url varchar(100) NOT NULL,
+	title varchar(30) NOT NULL,
+	PRIMARY KEY (url,instance_hash)
+);
+
 CREATE TABLE IF NOT EXISTS bookmark(
 	url varchar(100) NOT NULL,
 	title varchar(30) NOT NULL,

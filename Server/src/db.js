@@ -5,7 +5,7 @@ const connectionWithoutPromise = mysql.createPool({
   host: 'localhost',
   user: 'admin',
   password: '12345',
-  database: '411_bookmark_db',
+  database: 'mydatabase',
   port: 3307,
   multipleStatements: true
 });
